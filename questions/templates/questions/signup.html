@@ -1,32 +1,11 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'questions/layout/base.html' %}
+
+{% load static %}
+    {% block title %}
     <title>AskPupkin - Регистрация</title>
-    <link rel="icon" href="static/img/favicon.ico">
-    <link rel="stylesheet" href="static/css/main.css">
-</head>
-<body>
+    {% endblock %}
+{% block content %}
 
-    <header class="header">
-        <div class="container header-content">
-            <a class="logo" href="index.html">AskPupkin</a>
-            
-            <form class="search-form">
-                <input type="search" placeholder="Поиск вопроса...">
-            </form>
-
-            <div class="user-nav">
-                <a href="ask.html" class="btn btn-primary hide-mobile">Спросить!</a>
-                <a href="login.html" class="link-light">Вход</a>
-                <a href="signup.html" class="btn btn-outline">Регистрация</a>
-            </div>
-        </div>
-    </header>
-
-    <main class="container main-layout">
-        <section class="content">
             <div class="auth-container">
                 <h1 class="page-title">Регистрация</h1>
                 
@@ -72,37 +51,9 @@
                     
                     <div style="text-align: center;">
                         <span>Уже есть аккаунт?</span>
-                        <a href="login.html" class="link-primary">Войти</a>
+                        <a href="{% url 'login' %}" class="link-primary">Войти</a>
                     </div>
                 </form>
             </div>
-        </section>
-
-        <aside class="sidebar">
-            <section class="sidebar-block">
-                <h5 class="sidebar-title">Popular Tags</h5>
-                <div class="tags-cloud">
-                    <a href="indexTaged.html" class="tag">cpp</a>
-                    <a href="indexTaged.html" class="tag">nginx</a>
-                    <a href="indexTaged.html" class="tag">python</a>
-                </div>
-            </section>
             
-            <section class="sidebar-block">
-                <h5 class="sidebar-title">Best Members</h5>
-                <ul class="members-list">
-                    <li><a href="#">Yuri_Shevchuk</a></li>
-                    <li><a href="#">Backend_Master</a></li>
-                </ul>
-            </section>
-        </aside>
-    </main>
-
-    <footer class="footer">
-        <div class="container">
-            <small>&copy; 2026 VK Education Web Course</small>
-        </div>
-    </footer>
-
-</body>
-</html>
+ {% endblock %}

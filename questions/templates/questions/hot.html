@@ -1,0 +1,13 @@
+{% extends 'questions/layout/base.html' %}
+
+{% load static %}
+    {% block title %}
+    <title>AskPupkin - Популярное</title>
+    {% endblock %}
+{% block content %}
+    <div class = "page-title">Популярные вопросы<a href = "{% url 'index' %}">Новые вопросы</a></div>
+    {% for question in questions %}
+    {% include 'questions/partials/question.html'%}
+    {% endfor %}
+    {% include 'questions/partials/pagination.html' %}
+{% endblock %}
