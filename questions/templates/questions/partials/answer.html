@@ -1,0 +1,26 @@
+{%load static%}
+            <div class="answer-card">
+                <div class="author-aside">
+                    <img src="{% static 'questions/default.jpg' %}" alt="Student" class="avatar-sm">
+                    <div class="vote-widget">
+                        <button class="vote-btn vote-up">▲</button>
+                        <span class="vote-count">{{answer.likes}}</span>
+                        <button class="vote-btn vote-down">▼</button>
+                    </div>
+                </div>
+                <div class="answer-body">
+                    <div class="answer-text">
+                        {{answer.text}}
+                    </div>
+                    <div class="answer-footer">
+                        <div class="answer-controls">
+                            <label class="correct-checkbox-container">
+                                <input type="checkbox">
+                                <span class="checkmark"></span>
+                                <span class="label-text">Correct?</span>
+                            </label>
+                        </div>
+                        <span class="post-time">16.03.2026, 12:45</span>
+                    </div>
+                </div>
+            </div>

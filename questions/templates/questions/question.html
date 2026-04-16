@@ -1,0 +1,52 @@
+{% extends 'questions/layout/base.html' %}
+
+{% load static %}
+    {% block title %}
+    <title>AskPupkin - Вопрос</title>
+    {% endblock %}
+{% block content %}
+
+<div class = "page-title">Как правильно реализовать бинарную кучу на C++?</div>
+        <article class="question-full">
+            <div class="question-header-row">
+                <div class="author-aside">
+                    <img src="{% static '/questions/default.jpg' %}" alt="Author" class="avatar-lg">
+                    <div class="vote-widget">
+                        <button class="vote-btn vote-up">▲</button>
+                        <span class="vote-count">128</span>
+                        <button class="vote-btn vote-down">▼</button>
+                    </div>
+                </div>
+                
+                <div class="question-content-main">
+                    <h1 class="question-title">{{selected_question.title}}</h1>
+                    <div class="question-text">
+                        <p>{{selected_question.text}}</p>
+                    </div>
+                    
+                    <div class="question-footer">
+                        <div class="tags-row">
+                    {% for tag in selected_question.tags %}
+                    <a href="/?tag={{ tag }}" class="tag">{{tag}}</a>
+                    {% endfor %}
+                        </div>
+                        <div class="post-info">
+                            <span class="post-time">Asked 15.03.2026</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <hr class="section-divider">
+
+        <section class="answers-section">
+            <h3>Ответы</h3>
+
+
+    {% for answer in answers %}
+    {% include 'questions/partials/answer.html'%}
+    {% endfor %}
+                </section>
+    {% include 'questions/partials/pagination.html' %}
+ {% endblock %}

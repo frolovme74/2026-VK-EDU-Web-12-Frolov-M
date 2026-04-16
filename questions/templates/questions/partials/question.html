@@ -1,0 +1,25 @@
+    {% load static %}
+    <article class="question-card">
+        <div class="question-stats">
+            <img src="{% static '/questions/default.jpg' %}" alt="Avatar" class="avatar-lg">
+            <div class="vote-widget active-down"> <button class="vote-up">▲</button>
+                <span class="vote-count">42</span>
+                <button class="vote-down active">▼</button>
+            </div>
+        </div>
+        <div class="question-body">
+            <h2 class="question-title"><a href="{% url 'question' %}?quest={{question.id}}">{{question.title}}</a></h2>
+            <p class="question-excerpt">{{question.text}}</p>
+            <div class="question-footer">
+                <div class="question-meta">
+                    <a href="{% url 'question' %}?quest={{question.id}}" class="answers-link">Answers (3)</a>
+                    <span class="tags">
+                        {% for tag in question.tags %}
+                        <a href="/?tag={{ tag }}" class="tag">{{tag}}</a>
+                        {% endfor %}
+                    </span>
+                </div>
+                <span class="post-time">2 hours ago</span>
+            </div>
+        </div>
+    </article>
