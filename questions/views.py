@@ -50,6 +50,23 @@ def index(request):
 
     return render(request, 'questions/index.html', context={'questions': page_obj.object_list, 'page_obj': page_obj, 'selected_tag': selected_tag})
 
+def hot(request):
+
+    reversed_questions = QUESTIONS[::-1]
+    selected_tag = request.GET.get('tag')
+
+    if selected_tag:
+        filtered_questions = [
+            q for q in reversed_questions 
+            if selected_tag in q['tags']
+        ]
+
+    else:
+        filtered_questions = reversed_questions
+    
+    page_obj = paginate(filtered_questions, request, 4)
+    return render(request, 'questions/hot.html', context={'questions': page_obj.object_list, 'page_obj': page_obj, 'selected_tag': selected_tag})
+
 def signup(request):
     return render(request, 'questions/signup.html')
 
