@@ -3,10 +3,10 @@
    ========================================================================== */
 
 
-* { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0; 
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
@@ -34,11 +34,11 @@ body {
    ========================================================================== */
 .header {
     background-color: #212529;
-    height: 70px; 
+    height: 70px;
     margin-bottom: 2rem;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     display: flex;
-    align-items: center; 
+    align-items: center;
 }
 
 .header-content {
@@ -85,10 +85,10 @@ body {
     height: 100%;
 }
 
-.logged-user { 
-    display: flex; 
-    align-items: center; 
-    gap: 12px; 
+.logged-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .user-avatar {
@@ -99,22 +99,22 @@ body {
     border: 1px solid #495057;
 }
 
-.user-meta { 
-    display: flex; 
-    flex-direction: column; 
-    line-height: 1.2; 
+.user-meta {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
 }
 
-.user-nickname { 
-    color: #fff; 
-    font-weight: 600; 
-    font-size: 0.9rem; 
+.user-nickname {
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
 }
 
-.user-controls { 
-    display: flex; 
-    gap: 8px; 
-    margin-top: 2px; 
+.user-controls {
+    display: flex;
+    gap: 8px;
+    margin-top: 2px;
 }
 
 .control-link {
@@ -124,13 +124,13 @@ body {
     transition: color 0.2s ease;
 }
 
-.control-link:hover { 
-    color: #fff; 
-    text-decoration: underline; 
+.control-link:hover {
+    color: #fff;
+    text-decoration: underline;
 }
 
-.control-link.logout { 
-    color: #ff6b6b; 
+.control-link.logout {
+    color: #ff6b6b;
 }
 
 /* ==========================================================================
@@ -181,8 +181,8 @@ body {
     margin-bottom: 1rem;
 }
 
-.btn-dark:hover { 
-    opacity: 0.85; 
+.btn-dark:hover {
+    opacity: 0.85;
 }
 
 .link-light {
@@ -205,11 +205,11 @@ body {
 /* ==========================================================================
    4. ОСНОВНАЯ СЕТКА (LAYOUT)
    ========================================================================== */
-.main-layout { 
-    display: flex; 
-    gap: 30px; 
-    flex-grow: 1; 
-    align-items: flex-start; 
+.main-layout {
+    display: flex;
+    gap: 30px;
+    flex-grow: 1;
+    align-items: flex-start;
 }
 .page-title {
     font-size: 1.75rem;
@@ -233,13 +233,13 @@ body {
 
 
 
-.content { 
-    flex: 3; 
+.content {
+    flex: 3;
 }
 
-.sidebar { 
-    flex: 1; 
-    min-width: 250px; 
+.sidebar {
+    flex: 1;
+    min-width: 250px;
 }
 
 .sidebar-block {
@@ -269,11 +269,12 @@ body {
     border-radius: 8px;
     margin-bottom: 20px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    overflow-wrap: anywhere;
 }
 
-.question-header-row { 
-    display: flex; 
-    gap: 25px; 
+.question-header-row {
+    display: flex;
+    gap: 25px;
     align-items: flex-start;
     margin-bottom: 1.5rem;
 }
@@ -321,21 +322,21 @@ body {
 .vote-widget .vote-up:hover, .vote-up.active { color: orange; }
 .vote-widget .vote-down:hover, .vote-down.active { color: #0d6efd; }
 
-.question-body, .answer-body { 
-    flex: 1; 
-    display: flex; 
-    flex-direction: column; 
+.question-body, .answer-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .question-title { font-size: 1.3rem; margin-bottom: 10px; line-height: 1.3; }
 .question-title a { color: #0d6efd; text-decoration: none; }
 .question-title a:hover { text-decoration: underline; }
 
-.question-excerpt, .answer-text, .question-text { 
-    color: #495057; 
-    margin-bottom: 15px; 
-    font-size: 0.95rem; 
-}
+.question-excerpt, .answer-text, .question-text {
+    color: #495057;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+    }
 
 .question-footer, .answer-footer {
     display: flex;
@@ -349,9 +350,9 @@ body {
 .question-meta { display: flex; align-items: center; gap: 15px; }
 .answers-link { color: #0d6efd; text-decoration: none; font-weight: 600; }
 .post-time {
-    color: #adb5bd;    
-    font-size: 0.9rem; 
-    white-space: nowrap; 
+    color: #adb5bd;
+    font-size: 0.9rem;
+    white-space: nowrap;
 }
 
 .answer-card.is-correct {
@@ -506,7 +507,7 @@ body {
 
 @media (max-width: 712px) {
     .header {
-    height: 140px; 
+    height: 140px;
 
 }
     /* .hide-mobile { display: none; } */
@@ -518,8 +519,7 @@ body {
 }
 @media (max-width: 490px){
         .header {
-    height: 210px; 
+    height: 210px;
 
 }
 }
-
