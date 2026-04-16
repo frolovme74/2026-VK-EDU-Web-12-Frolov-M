@@ -89,8 +89,7 @@ def question(request):
         item = None
 
     if not item:
-        from django.http import Http404
-        raise Http404("Вопрос не найден")
+        return index(request)
 
     page_obj = paginate(ANSWERS, request, 4)
     return render(request, 'questions/question.html', context={'selected_question': item, 'page_obj': page_obj, 'answers': page_obj.object_list})
