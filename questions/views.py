@@ -18,7 +18,7 @@ ANSWERS = [
     'likes': i,
     'text': f'Text {i}',
     }
-    for i in range(20)
+    for i in range(20, 0, -1)
 ]
 
 def paginate(objects, request, per_page=5):
