@@ -1,0 +1,509 @@
+/* ==========================================================================
+   1. ОБНУЛЕНИЕ И БАЗОВЫЕ СТИЛИ
+   ========================================================================== */
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+    background-color: #f8f9fa;
+    color: #212529;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-width: 320px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+    width: 100%;
+}
+
+
+/* ==========================================================================
+   2. ШАПКА (HEADER)
+   ========================================================================== */
+.header {
+    background-color: #212529;
+
+    height: 70px; 
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center; 
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 20px;
+}
+
+.logo {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.search-form {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 500px;
+}
+
+.search-form input {
+    width: 100%;
+    max-width: 500px;
+    height: 38px;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: 1px solid #444;
+    outline: none;
+    line-height: 38px;
+    background: #fff;
+}
+
+.user-nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+    min-width: 320px;
+    height: 100%;
+}
+
+.logged-user { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+}
+
+.user-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 6px;
+    object-fit: cover;
+    border: 1px solid #495057;
+}
+
+.user-meta { 
+    display: flex; 
+    flex-direction: column; 
+    line-height: 1.2; 
+}
+
+.user-nickname { 
+    color: #fff; 
+    font-weight: 600; 
+    font-size: 0.9rem; 
+}
+
+.user-controls { 
+    display: flex; 
+    gap: 8px; 
+    margin-top: 2px; 
+}
+
+.control-link {
+    font-size: 0.75rem;
+    color: #adb5bd;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.control-link:hover { 
+    color: #fff; 
+    text-decoration: underline; 
+}
+
+.control-link.logout { 
+    color: #ff6b6b; 
+}
+
+/* ==========================================================================
+   3. КНОПКИ И ССЫЛКИ
+   ========================================================================== */
+.btn {
+    padding: 0.5rem 1.2rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    color: #fff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+}
+
+.btn-outline {
+    border: 1px solid #fff;
+    color: #fff;
+    background: transparent;
+}
+
+.btn-outline:hover {
+    background-color: #fff;
+    color: #212529;
+    transform: translateY(-1px);
+}
+
+.btn-dark {
+    background-color: #212529;
+    color: #fff;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+}
+
+.btn-dark:hover { 
+    opacity: 0.85; 
+}
+
+.link-light {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.link-light:hover {
+    color: #0dcaf0;
+    text-decoration: underline;
+}
+
+.link-primary {
+    color: #0d6efd;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   4. ОСНОВНАЯ СЕТКА (LAYOUT)
+   ========================================================================== */
+.main-layout { 
+    display: flex; 
+    gap: 30px; 
+    flex-grow: 1; 
+    align-items: flex-start; 
+}
+.page-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #212529;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.content { 
+    flex: 3; 
+}
+
+.sidebar { 
+    flex: 1; 
+    min-width: 250px; 
+}
+
+.sidebar-block {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.sidebar-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f8f9fa;
+}
+
+/* ==========================================================================
+   5. КАРТОЧКИ (ВОПРОСЫ И ОТВЕТЫ)
+   ========================================================================== */
+.question-card, .answer-card {
+    display: flex;
+    gap: 20px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.question-header-row { 
+    display: flex; 
+    gap: 25px; 
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.question-header-row .author-aside {
+    min-width: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.question-header-row .question-title-main {
+    flex: 1;
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+.question-stats, .author-aside, .question-aside {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px;
+}
+
+.avatar-lg { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; margin-bottom: 10px; }
+.avatar-sm { width: 50px; height: 50px; border-radius: 5px; object-fit: cover; }
+
+.vote-widget {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.vote-widget button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #ced4da;
+    transition: color 0.2s;
+}
+
+.vote-widget .vote-count { font-weight: bold; color: #495057; }
+.vote-widget .vote-up:hover, .vote-up.active { color: orange; }
+.vote-widget .vote-down:hover, .vote-down.active { color: #0d6efd; }
+
+.question-body, .answer-body { 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+}
+
+.question-title { font-size: 1.3rem; margin-bottom: 10px; line-height: 1.3; }
+.question-title a { color: #0d6efd; text-decoration: none; }
+.question-title a:hover { text-decoration: underline; }
+
+.question-excerpt, .answer-text, .question-text { 
+    color: #495057; 
+    margin-bottom: 15px; 
+    font-size: 0.95rem; 
+}
+
+.question-footer, .answer-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.question-meta { display: flex; align-items: center; gap: 15px; }
+.answers-link { color: #0d6efd; text-decoration: none; font-weight: 600; }
+.post-time { color: #adb5bd; }
+
+.answer-card.is-correct {
+    border: 1px solid #28a745;
+    background-color: #f8fff9;
+}
+
+/* ==========================================================================
+   6. ТЕГИ, СПИСКИ И КОМПОНЕНТЫ
+   ========================================================================== */
+.tags-cloud, .tags, .tags-list { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.tag {
+    background: #e1ecf4;
+    color: #39739d;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+.tag:hover { background: #d1e2ee; }
+
+.tag-highlight {
+    color: #39739d;
+    background: #e1ecf4;
+    padding: 2px 10px;
+    border-radius: 4px;
+}
+
+.members-list { list-style: none; }
+.members-list li { margin-bottom: 8px; }
+.members-list a { color: #0d6efd; text-decoration: none; font-size: 0.95rem; }
+.members-list a:hover { text-decoration: underline; }
+
+.correct-checkbox-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    gap: 8px;
+}
+.correct-checkbox-container input { display: none; }
+.checkmark {
+    width: 22px; height: 22px;
+    border: 2px solid #dee2e6;
+    border-radius: 4px;
+    position: relative;
+}
+.correct-checkbox-container input:checked ~ .checkmark {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+.correct-checkbox-container input:checked ~ .checkmark::after {
+    content: "✔"; color: #fff; position: absolute; left: 4px; top: -2px;
+}
+.page-dots {
+    padding: 8px;
+    color: #6c757d;
+}
+
+.avatar-edit-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.form-input-file {
+    font-size: 0.9rem;
+}
+
+
+/* ==========================================================================
+   7. ФОРМЫ (АВТОРИЗАЦИЯ, НАСТРОЙКИ)
+   ========================================================================== */
+.auth-container, .settings-form {
+    max-width: 500px;
+    margin: 0;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.settings-form { max-width: 600px; }
+
+.form-group { margin-bottom: 1.5rem; }
+
+.form-label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.form-control, .form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.error-input, .error-field { border-color: #dc3545;}
+.error-text { color: #dc3545; font-size: 0.8rem; margin-top: 4px; display: block; }
+.hint { color: #6c757d; font-size: 0.8rem; }
+
+.alert {
+    padding: 0.75rem 1.25rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+}
+.alert-danger { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+
+/* ==========================================================================
+   8. ПАГИНАЦИЯ И ФУТЕР
+   ========================================================================== */
+.pagination { display: flex; gap: 8px; margin: 2rem 0; }
+.page-link {
+    padding: 8px 14px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #0d6efd;
+    transition: all 0.2s;
+}
+.page-link.active {
+    background-color: #212529;
+    color: #fff;
+    border-color: #212529;
+}
+
+.footer {
+    background: #fff;
+    border-top: 1px solid #dee2e6;
+    padding: 2rem 0;
+    text-align: center;
+    color: #6c757d;
+    margin-top: 2rem;
+}
+
+/* ==========================================================================
+   9. АДАПТИВНОСТЬ
+   ========================================================================== */
+@media (max-width: 992px) {
+    .main-layout { flex-direction: column; }
+    .sidebar { width: 100%; order: 2; }
+    .content { order: 1; }
+}
+
+@media (max-width: 712px) {
+    .header {
+    height: 140px; 
+
+}
+    /* .hide-mobile { display: none; } */
+    .header-content { flex-wrap: wrap; }
+    .search-form {order: 3; max-width: 100%; margin-top: 10px; }
+    .question-card { flex-direction: column; }
+    .question-stats { flex-direction: row; justify-content: space-between; min-width: 100%; }
+    .vote-widget { flex-direction: row; gap: 10px; }
+}
+@media (max-width: 490px){
+        .header {
+    height: 210px; 
+
+}
+}
+
+
