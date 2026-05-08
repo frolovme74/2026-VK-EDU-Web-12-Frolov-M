@@ -67,15 +67,6 @@ def hot(request):
     page_obj = paginate(filtered_questions, request, 4)
     return render(request, 'questions/hot.html', context={'questions': page_obj.object_list, 'page_obj': page_obj, 'selected_tag': selected_tag})
 
-def signup(request):
-    return render(request, 'questions/signup.html')
-
-def login(request):
-    return render(request, 'questions/login.html')
-
-def profile(request):
-    return render(request, 'questions/profile.html')
-
 def ask(request):
     return render(request, 'questions/ask.html')
 
