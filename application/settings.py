@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import environ
 from pathlib import Path
 import os
 
@@ -20,11 +21,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-z1ncl^1&(j&_!r&y*#@90b901u3c4xtf%y=8gr&^p0)dg@y_+9'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
+ENV_FILE = os.environ.get('ENV_FILE', '.env.local')
+environ.Env.read_env(os.path.join(BASE_DIR, ENV_FILE))
+
+SECRET_KEY = env('SECRET_KEY')
+DEBUG = env('DEBUG')
+
+DATABASES = {
+    'default': env.db(), 
+}
 
 ALLOWED_HOSTS = []
 
@@ -77,22 +87,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'application.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'askerDB',
-        'USER': 'admin',
-        'PASSWORD': 'admin1',
-        'HOST': '127.0.0.1',
-        'PORT': 5432,
-    }
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
