@@ -5,9 +5,19 @@
     <title>AlertHub - Главная</title>
     {% endblock %}
 {% block content %}
-    <div class = "page-title">Новые вопросы<a href = "{% url 'hot' %}">Популярные вопросы</a></div>
-    {% for question in questions %}
+    {% if is_hot %}
+    <div class = "page-title">Популярные вопросы{% if selected_tag %} по тегу:<a href="{% url 'hot' %}" class = "reset-tags-btn">{{selected_tag}}</a>{%endif%}
+    <a href = "{% url 'index' %}{% if selected_tag %}?tag={{ selected_tag|urlencode }}{% endif %}" class = "search-option">Новые вопросы</a></div>
+    {% else %}
+    <div class = "page-title">Новые вопросы{% if selected_tag %} по тегу:<a href="{% url 'index' %}" class = "reset-tags-btn">{{selected_tag}}</a>
+    {%endif%}<a href = "{% url 'hot' %}{% if selected_tag %}?tag={{ selected_tag|urlencode }}{% endif %}" class = "search-option">Популярные вопросы</a></div>
+    {% endif %}
+    {% if page_obj %}
+    {% for question in page_obj %}
     {% include 'questions/partials/question.html'%}
     {% endfor %}
     {% include 'questions/partials/pagination.html' %}
+    {% else %}
+    <div class = "empty-results">К сожалению вопросов{% if selected_tag%} по тегу <b>{{selected_tag}}</b>{%endif%} пока нет</div>
+    {% endif %}
 {% endblock %}

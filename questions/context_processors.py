@@ -1,12 +1,5 @@
-from .views import QUESTIONS  
+from questions.models import Tag
 
-def all_tags_processor(request):
-    all_tags = []
-    for q in QUESTIONS:
-        all_tags.extend(q.get('tags', []))
-    
-    unique_tags = sorted(list(set(all_tags)))
-    
-    return {
-        'global_unique_tags': unique_tags
-    }
+def popular_tags(request):
+    tags = Tag.objects.order_by('-question_count')[:10]
+    return {'popular_tags': tags}

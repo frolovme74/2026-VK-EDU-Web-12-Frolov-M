@@ -222,7 +222,7 @@ body {
     padding-bottom: 0.5rem;
     border-bottom: 2px solid #dee2e6;
 }
-.page-title a {
+.search-option {
     margin-left: auto;
     font-size: 1rem; 
     font-weight: 500;
@@ -231,7 +231,10 @@ body {
     padding: 6px 12px;
 }
 
-
+.reset-tags-btn {
+    color: #0d6efd;
+    text-decoration: none;
+}
 
 .content {
     flex: 3;
@@ -358,6 +361,16 @@ body {
 .answer-card.is-correct {
     border: 1px solid #28a745;
     background-color: #f8fff9;
+}
+
+.answers-headline {
+    margin: 5px 0;
+}
+
+.empty-results {
+    font-size: 1.1rem;
+    color: #6c757d; 
+    margin-top: 2rem;
 }
 
 /* ==========================================================================
