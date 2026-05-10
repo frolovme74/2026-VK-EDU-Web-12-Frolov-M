@@ -1,15 +1,19 @@
 services:
   db:
     image: postgres:15
+    container_name: postgres_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
       - .env.docker
     ports:
       - "5432:5432"
+    networks:
+      - backend_net
 
   web:
     build: .
+    container_name: django_web
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
@@ -19,6 +23,12 @@ services:
       - .env.docker
     depends_on:
       - db
+    networks:
+      - backend_net
+
+networks:
+  backend_net:
+    driver: bridge
 
 volumes:
   postgres_data:
