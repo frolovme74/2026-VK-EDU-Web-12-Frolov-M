@@ -1,95 +1,38 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
+from .models import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-# Create your views here.
-
-QUESTIONS = [
-    {
-    'id': i,
-    'title': f'question title {i}',
-    'text': f'Text {i}',
-    'tags': ['python', 'backend'] if i % 2 == 0 else ['cpp', 'ngnix']
-    }
-    for i in range(30)
-]
-
-ANSWERS = [
-    {
-    'likes': i,
-    'text': f'Text {i}',
-    }
-    for i in range(20, 0, -1)
-]
 
 def paginate(objects, request, per_page=5):
-
     page_number = request.GET.get('page')
     paginator = Paginator(objects, per_page)
-    try:
-        page_obj = paginator.page(page_number)
-    except PageNotAnInteger:
-        page_obj = paginator.page(1)
-    except EmptyPage:
-        page_obj = paginator.page(paginator.num_pages)
 
-    return page_obj
+    return paginator.get_page(page_number)
 
 def index(request):
-    selected_tag = request.GET.get('tag')
-
-    if selected_tag:
-        filtered_questions = [
-            q for q in QUESTIONS 
-            if selected_tag in q['tags']
-        ]
-
-    else:
-        filtered_questions = QUESTIONS
-
-    page_obj = paginate(filtered_questions, request, 4)
-
-    return render(request, 'questions/index.html', context={'questions': page_obj.object_list, 'page_obj': page_obj, 'selected_tag': selected_tag})
+    tag = request.GET.get('tag')
+    questions = Question.objects.get_new_questions(tag)
+    page_obj = paginate(questions, request)
+    
+    return render(request, 'questions/index.html', {'page_obj': page_obj, 'selected_tag': tag})
 
 def hot(request):
-
-    reversed_questions = QUESTIONS[::-1]
-    selected_tag = request.GET.get('tag')
-
-    if selected_tag:
-        filtered_questions = [
-            q for q in reversed_questions 
-            if selected_tag in q['tags']
-        ]
-
-    else:
-        filtered_questions = reversed_questions
+    tag = request.GET.get('tag')
+    questions = Question.objects.get_hot_questions(tag)
+    page_obj = paginate(questions, request)
     
-    page_obj = paginate(filtered_questions, request, 4)
-    return render(request, 'questions/hot.html', context={'questions': page_obj.object_list, 'page_obj': page_obj, 'selected_tag': selected_tag})
+    return render(request, 'questions/index.html', {'page_obj': page_obj, 'selected_tag': tag, 'is_hot': True})
 
-def signup(request):
-    return render(request, 'questions/signup.html')
-
-def login(request):
-    return render(request, 'questions/login.html')
-
-def profile(request):
-    return render(request, 'questions/profile.html')
 
 def ask(request):
     return render(request, 'questions/ask.html')
 
-def question(request):
-    raw_id = request.GET.get('quest')
-    
-    try:
-        selected_id = int(raw_id)
-        item = next((q for q in QUESTIONS if q['id'] == selected_id), None)
-    except (ValueError, TypeError):
-        item = None
+def question(request, question_id):
+    question_item = Question.objects.get_with_related(question_id)
+    answers = Answer.objects.get_for_question(question_item)
+    page_obj = paginate(answers, request)
 
-    if not item:
-        return index(request)
-
-    page_obj = paginate(ANSWERS, request, 4)
-    return render(request, 'questions/question.html', context={'selected_question': item, 'page_obj': page_obj, 'answers': page_obj.object_list})
+    return render(request, 'questions/question.html', {
+        'question': question_item,
+        'page_obj': page_obj,
+    })

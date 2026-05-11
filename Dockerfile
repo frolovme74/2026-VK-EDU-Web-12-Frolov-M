@@ -1,29 +1,26 @@
-# Используем Python 3.12 (самый актуальный и стабильный для Django 6)
 FROM python:3.12-slim
 
-# Настройки среды
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV ENV_FILE=.env.docker 
 
 WORKDIR /app
 
-# Устанавливаем минимально необходимые системные пакеты
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     python3-dev \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Обновляем pip перед установкой зависимостей
-RUN pip install --upgrade pip
-
-# Копируем зависимости
 COPY requirements.txt .
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-# Устанавливаем пакеты. Если упадет здесь — мы увидим точную причину.
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Копируем остальной проект
 COPY . .
+
+RUN useradd -U django-user && \
+    chown -R django-user:django-user /app
+USER django-user
 
 EXPOSE 8000
 

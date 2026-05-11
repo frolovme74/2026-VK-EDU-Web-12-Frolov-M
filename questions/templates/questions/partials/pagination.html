@@ -1,10 +1,16 @@
- {% load common_tags %} 
-  <nav class="pagination">
-{% if page_obj.has_previous %}
-        <a href="?{% url_replace page=page_obj.previous_page_number %}" class="page-link">Previous</a>
-    {% endif %}
-        <a href="#" class="page-link active">{{page_obj.number}}</a>
-{% if page_obj.has_next %}
-        <a href="?{% url_replace page=page_obj.next_page_number %}" class="page-link">Next</a>
-    {% endif %}
-    </nav>
+{% load common_tags %}
+<nav class="pagination">
+    {% for n in page_obj.paginator.page_range %}
+        {% if n == 1 or n == page_obj.paginator.num_pages or n > page_obj.number|add:'-3' and n < page_obj.number|add:'3' %}
+            
+            {% if page_obj.number == n %}
+                <a href="#" class="page-link active">{{ n }}</a>
+            {% else %}
+                <a href="?{% url_replace page=n %}" class="page-link">{{ n }}</a>
+            {% endif %}
+
+        {% elif n == page_obj.number|add:'-3' or n == page_obj.number|add:'3' %}
+            <span class="page-link" style="border: none; color: #6c757d;">...</span>
+        {% endif %}
+    {% endfor %}
+</nav>

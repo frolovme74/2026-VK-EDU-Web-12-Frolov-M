@@ -14,3 +14,7 @@ media/
 .env
 .vscode/
 .idea/
+
+.env
+.env.local
+.env.docker
