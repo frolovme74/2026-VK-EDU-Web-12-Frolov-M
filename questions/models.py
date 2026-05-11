@@ -2,9 +2,14 @@ from django.db import models
 from django.utils.text import Truncator
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
+from django.db.models import Sum, Case, When, IntegerField
+from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete, m2m_changed, pre_delete
+from django.db.models import F
+
 class Tag(models.Model):
 
-    name = models.CharField(verbose_name="Название", max_length=30, unique=True)
+    name = models.SlugField(verbose_name="Название", max_length=30, unique=True)
     question_count = models.IntegerField(verbose_name="Количество вопросов с тегом", default=0)
     class Meta:
         verbose_name = "Тег"
@@ -12,6 +17,26 @@ class Tag(models.Model):
     
     def __str__(self):
         return self.name
+
+class RatingMixin(models.Model):
+    rating = models.IntegerField(verbose_name="Рейтинг", default=0, db_index=True)
+
+    class Meta:
+        abstract = True
+
+    def update_rating(self):
+        score = self.votes.aggregate(
+            total=Sum(
+                Case(
+                    When(is_like=True, then=1),
+                    When(is_like=False, then=-1),
+                    default=0,
+                    output_field=IntegerField()
+                )
+            )
+        )['total'] or 0
+        self.rating = score
+        self.save(update_fields=['rating'])
 
 class QuestionManager(models.Manager):
 
@@ -42,14 +67,12 @@ class QuestionManager(models.Manager):
             pk=question_id
         )
     
-class Question(models.Model):
-    content = models.TextField(verbose_name="Текст вопроса")
+class Question(RatingMixin):
+    content = models.TextField(verbose_name="Текст вопроса", max_length=50000)
     title = models.CharField(verbose_name="Заголовок", max_length=255)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания", db_index=True)
     author = models.ForeignKey("auth.User", verbose_name="Автор вопроса", on_delete=models.CASCADE, related_name="questions")
     tags = models.ManyToManyField("questions.Tag", related_name="questions", verbose_name="Теги")
-    # rating = models.IntegerField()
-    rating = models.IntegerField(verbose_name="Рейтинг", default=0, db_index=True)
     answers_count = models.PositiveIntegerField(verbose_name="Количество ответов", default=0)
     objects = QuestionManager()
 
@@ -94,14 +117,13 @@ class AnswerManager(models.Manager):
     #             Count('votes', filter=Q(votes__is_like=False))
     #         )
     #     )
-class Answer(models.Model):
+class Answer(RatingMixin):
 
-    content = models.TextField(verbose_name="Текст ответа")
+    content = models.TextField(verbose_name="Текст ответа", max_length=30000)
     related_question = models.ForeignKey("questions.Question", verbose_name= "Соответсвтующий вопрос", on_delete=models.CASCADE, related_name="answers")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания", db_index=True)
     author = models.ForeignKey("auth.User", verbose_name="Автор ответа", on_delete=models.CASCADE, related_name="answers")
     is_correct = models.BooleanField(verbose_name= "Правильно?")
-    rating = models.IntegerField(verbose_name="Рейтинг", default=0, db_index=True)
 
     objects = AnswerManager()
 
@@ -122,6 +144,7 @@ class AnswerLike(models.Model):
     user = models.ForeignKey("auth.User", verbose_name="От пользователя", on_delete=models.CASCADE)
     # is_positive = models.BooleanField(verbose_name= "Лайк или дизлайк?")
     is_like = models.BooleanField(default=True, verbose_name="Тип оценки", choices=((True, 'Лайк'), (False, 'Дизлайк')))
+
     class Meta:
         verbose_name = "Лайк ответа"
         verbose_name_plural = "Лайки ответов"
@@ -131,3 +154,36 @@ class AnswerLike(models.Model):
     def __str__(self):
         return f"Лайк пользователя {self.user_id} на ответ {self.answer_id}"
 
+@receiver([post_save, post_delete], sender=QuestionLike)
+@receiver([post_save, post_delete], sender=AnswerLike)
+def auto_update_rating(sender, instance, **kwargs):
+    target = getattr(instance, 'question', None) or getattr(instance, 'answer', None)
+    if target:
+        target.update_rating()
+
+@receiver(post_save, sender=Answer)
+def increment_answers_count(sender, instance, created, **kwargs):
+    if created:
+        Question.objects.filter(pk=instance.related_question_id).update(
+            answers_count=F('answers_count') + 1
+        )
+
+@receiver(post_delete, sender=Answer)
+def decrement_answers_count(sender, instance, **kwargs):
+    Question.objects.filter(pk=instance.related_question_id).update(
+        answers_count=F('answers_count') - 1
+    )
+
+@receiver(m2m_changed, sender=Question.tags.through)
+def update_tag_question_count(sender, instance, action, pk_set, **kwargs):
+    if action == "post_add":
+        Tag.objects.filter(pk__in=pk_set).update(question_count=F('question_count') + 1)
+        
+    elif action == "post_remove":
+        Tag.objects.filter(pk__in=pk_set).update(question_count=F('question_count') - 1)
+
+@receiver(pre_delete, sender=Question)
+def update_tag_count_on_delete(sender, instance, **kwargs):
+    tag_ids = instance.tags.values_list('id', flat=True)
+    if tag_ids:
+        Tag.objects.filter(pk__in=tag_ids).update(question_count=F('question_count') - 1)

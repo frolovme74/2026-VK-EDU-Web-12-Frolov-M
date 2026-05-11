@@ -6,8 +6,8 @@ from django.db.models.signals import post_save
 
 
 class Profile(models.Model):
-    user = models.OneToOneField("auth.User", on_delete=models.CASCADE, related_name='profile')
-    avatar = models.ImageField(upload_to='users/avatars/%Y/%m/%d/', blank=True)
+    user = models.OneToOneField("auth.User", on_delete=models.CASCADE, related_name='profile', verbose_name="Пользователь")
+    avatar = models.ImageField(upload_to='users/avatars/%Y/%m/%d/', blank=True, verbose_name="Аватар")
     class Meta:
         verbose_name = "Профиль пользователя"
         verbose_name_plural = "Профили пользователей"
@@ -24,7 +24,3 @@ class Profile(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
