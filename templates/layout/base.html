@@ -49,6 +49,8 @@
                 <div class="tags-cloud">
                     {% for tag in popular_tags %}
                     <a href="/?tag={{ tag |urlencode}}" class="tag">{{tag}}</a>
+                    {% empty %}
+                        Тегов пока нет
                     {% endfor %}
                 </div>
             </section>
@@ -56,8 +58,16 @@
             <section class="sidebar-block">
                 <h5 class="sidebar-title">Best Members</h5>
                 <ul class="members-list">
-                    <li><a href="#">Yuri_Shevchuk</a></li>
-                    <li><a href="#">Backend_Master</a></li>
+                    {% for profile in best_members %}
+                        <li>
+                           <a href="{{ profile.get_absolute_url }}">
+                                {{ profile.user.username }}
+                                <span class="badge bg-secondary">({{ profile.questions_count }})</span>
+                            </a>
+                        </li>
+                    {% empty %}
+                        <li>Пока нет активных пользователей</li>
+                    {% endfor %}
                 </ul>
             </section>
         </aside>

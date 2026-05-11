@@ -1,7 +1,7 @@
 {%load static%}
 <div class="answer-card">
     <div class="author-aside">
-        <img src="{{ answer.author.profile.avatar_url }}" alt="Avatar" class="avatar-sm">
+        <a href="{{answer.author.profile.get_absolute_url}}"><img src="{{ answer.author.profile.avatar_url }}" alt="Avatar" class="avatar-sm"></a>
         <div class="vote-widget">
             <button class="vote-btn vote-up">▲</button>
             <span class="vote-count">{{answer.rating}}</span>

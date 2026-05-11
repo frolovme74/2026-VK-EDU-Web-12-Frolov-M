@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.models import User
 
 def signup(request):
     return render(request, 'core/signup.html')
@@ -9,4 +10,10 @@ def login(request):
 def profile(request):
     return render(request, 'core/profile.html')
 
-# Create your views here.
+
+def profile_view(request, user_id):
+    target_user = get_object_or_404(User.objects.select_related('profile'), pk=user_id)
+    
+    return render(request, 'core/user_profile.html', {
+        'target_user': target_user,
+    })
