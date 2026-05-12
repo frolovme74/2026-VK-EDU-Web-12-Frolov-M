@@ -39,16 +39,6 @@ class RatingMixin(models.Model):
         self.save(update_fields=['rating'])
 
 class QuestionManager(models.Manager):
-
-    # def get_queryset(self):
-    #     return super().get_queryset().annotate(
-    #         answers_count=Count('answers', distinct=True),
-    #         rating=(
-    #             Count('votes', filter=Q(votes__is_like=True), distinct=True) - 
-    #             Count('votes', filter=Q(votes__is_like=False), distinct=True)
-    #         )
-    #     )
-    
     def get_new_questions(self, tag_name=None):
         queryset = self.select_related('author', 'author__profile').prefetch_related('tags').order_by('-created_at')
         if tag_name:
@@ -87,15 +77,12 @@ class Question(RatingMixin):
         verbose_name_plural = "Вопросы"
 
     def __str__(self):
-        # short_title = self.title[:20] + "..." if len(self.title) > 20 else self.title
-        # return f"Вопрос {self.id}: {short_title}"
         return f"Вопрос {self.id}: {Truncator(self.title).chars(40)}"
     
 class QuestionLike(models.Model):
 
     question = models.ForeignKey("questions.Question", verbose_name="Вопрос", on_delete=models.CASCADE, related_name="votes")
     user = models.ForeignKey("auth.User", verbose_name="От пользователя", on_delete=models.CASCADE)
-    # is_positive = models.BooleanField(verbose_name= "Лайк или дизлайк?")
     is_like = models.BooleanField(default=True, verbose_name="Тип оценки", choices=((True, 'Лайк'), (False, 'Дизлайк')))
 
     class Meta:
@@ -110,13 +97,7 @@ class QuestionLike(models.Model):
 class AnswerManager(models.Manager):
     def get_for_question(self, question):
         return question.answers.select_related('author', 'author__profile').order_by('-rating')
-    # def get_queryset(self):
-    #     return super().get_queryset().annotate(
-    #         rating=(
-    #             Count('votes', filter=Q(votes__is_like=True)) - 
-    #             Count('votes', filter=Q(votes__is_like=False))
-    #         )
-    #     )
+
 class Answer(RatingMixin):
 
     content = models.TextField(verbose_name="Текст ответа", max_length=30000)
@@ -131,18 +112,13 @@ class Answer(RatingMixin):
         verbose_name = "Ответ"
         verbose_name_plural = "Ответы"
 
-    # def __str__(self):
-    #     return f"Ответ {self.id}"
     def __str__(self):
-        # short_answer = self.content[:20] + "..." if len(self.content) > 20 else self.content
-        # return f"Ответ {self.id}: {short_answer}"
         return f"Ответ {self.id}: {Truncator(self.content).chars(40)}"
     
 class AnswerLike(models.Model):
 
     answer = models.ForeignKey("questions.Answer", verbose_name="Ответ", on_delete=models.CASCADE, related_name="votes")
     user = models.ForeignKey("auth.User", verbose_name="От пользователя", on_delete=models.CASCADE)
-    # is_positive = models.BooleanField(verbose_name= "Лайк или дизлайк?")
     is_like = models.BooleanField(default=True, verbose_name="Тип оценки", choices=((True, 'Лайк'), (False, 'Дизлайк')))
 
     class Meta:
