@@ -4,6 +4,7 @@ from questions.models import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from questions.forms import AskForm, AnswerForm
+from django.urls import reverse_lazy
 
 def paginate(objects, request, per_page=5):
     page_number = request.GET.get('page')
@@ -25,7 +26,7 @@ def hot(request):
     
     return render(request, 'questions/index.html', {'page_obj': page_obj, 'selected_tag': tag, 'is_hot': True})
 
-@login_required
+@login_required(login_url=reverse_lazy('login'))
 def ask(request):
     if request.method == 'POST':
         form = AskForm(request.POST)
