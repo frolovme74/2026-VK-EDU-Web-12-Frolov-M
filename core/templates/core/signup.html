@@ -1,59 +1,45 @@
 {% extends 'layout/base.html' %}
-
 {% load static %}
-    {% block title %}
-    <title>AlertHub - Регистрация</title>
-    {% endblock %}
+
+{% block title %}
+<title>AlertHub - Регистрация</title>
+{% endblock %}
+
 {% block content %}
+<div class="auth-container">
+    <h1 class="page-title">Регистрация</h1>
 
-            <div class="auth-container">
-                <h1 class="page-title">Регистрация</h1>
-                
-                <div class="alert alert-danger">Такой email уже зарегистрирован</div>
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endfor %}
+    {% endif %}
 
-                <form class="auth-form" action="#" method="post" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="username" class="form-label">Логин</label>
-                        <input type="text" class="form-control" id="username" name="username" placeholder="ivan_ivanov">
-                        <small class="error-text">Имя пользователя слишком короткое</small>
-                    </div>
+    <form class="auth-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
 
-                    <div class="form-group">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control error-input" id="email" name="email" placeholder="example@mail.ru">
-                        <small class="error-text">Вы ввели невалидный email</small>
-                    </div>
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
 
-                    <div class="form-group">
-                        <label for="nickname" class="form-label">Никнейм</label>
-                        <input type="text" class="form-control" id="nickname" name="nickname" placeholder="Ivan">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password" class="form-label">Пароль</label>
-                        <input type="password" class="form-control" id="password" name="password">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password_repeat" class="form-label">Повторите пароль</label>
-                        <input type="password" class="form-control" id="password_repeat" name="password_repeat">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="avatar" class="form-label">Аватар</label>
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <img src="static/img/default.jpg" alt="Preview" class="avatar-sm">
-                            <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-dark" style="width: 100%; margin-bottom: 1rem;">Зарегистрироваться</button>
-                    
-                    <div style="text-align: center;">
-                        <span>Уже есть аккаунт?</span>
-                        <a href="{% url 'login' %}" class="link-primary">Войти</a>
-                    </div>
-                </form>
+                {% if field.errors %}
+                    {{ field }}
+                    <script>document.getElementById('{{ field.id_for_label }}').classList.add('error-input');</script>
+                    {% for error in field.errors %}
+                        <small class="error-text">{{ error }}</small>
+                    {% endfor %}
+                {% else %}
+                    {{ field }}
+                {% endif %}
             </div>
-            
- {% endblock %}
+        {% endfor %}
+
+        <button type="submit" class="btn btn-dark" style="width: 100%; margin-bottom: 1rem;">Зарегистрироваться</button>
+        
+        <div style="text-align: center;">
+            <span>Уже есть аккаунт?</span>
+            <a href="{% url 'login' %}" class="link-primary">Войти</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

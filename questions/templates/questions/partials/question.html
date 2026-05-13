@@ -1,7 +1,9 @@
 {% load static %}
 <article class="question-card">
     <div class="question-stats">
-    <img src="{{ question.author.profile.avatar_url }}" alt="Avatar" class="avatar-lg">
+        <a href="{{ question.author.profile.get_absolute_url }}">
+        <img src="{{ question.author.profile.avatar_url }}" alt="Avatar" class="avatar-lg">
+        </a>
         <div class="vote-widget active-down"> <button class="vote-up">▲</button>
             <span class="vote-count">{{ question.rating }}</span>
             <button class="vote-down">▼</button>

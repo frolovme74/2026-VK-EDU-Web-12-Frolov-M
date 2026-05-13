@@ -6,11 +6,11 @@
     {% endblock %}
 {% block content %}
 
-<div class = "page-title">Вопрос от пользователя {{question.author.username}}</div>
+<div class = "page-title">Вопрос от пользователя:<a href="{{question.author.profile.get_absolute_url}}">{{question.author.username}}</a></div>
         <article class="question-full">
             <div class="question-header-row">
                 <div class="author-aside">
-                    <img src="{{ question.author.profile.avatar_url }}" alt="Avatar" class="avatar-lg">
+                    <a href="{{question.author.profile.get_absolute_url}}"><img src="{{ question.author.profile.avatar_url }}" alt="Avatar" class="avatar-lg"></a>
                     <div class="vote-widget">
                         <button class="vote-btn vote-up">▲</button>
                         <span class="vote-count">{{question.rating}}</span>
@@ -39,10 +39,24 @@
         </article>
 
         <hr class="section-divider">
+            <section class="add-answer-section">
+        {% if user.is_authenticated %}
+            <form method="post">
+                {% csrf_token %}
+                <div>
+                    <label class="form-label">Добавить ответ:</label>
+                    {{ form.content }}
+                </div>
+                <button type="submit" class="btn btn-primary">Отправить</button>
+            </form>
+        {% else %}
+            <p>Ответы могут оставлять только авторизованные пользователи</p>
+        {% endif %}
+    </section>
         {% if page_obj%}
 
         <section class="answers-section">
-            <h3 class = "answers-headline">Ответы</h3>
+            <h3 class = "answers-headline">Ответы ({{question.answers_count}})</h3>
 
 
     {% for answer in page_obj %}

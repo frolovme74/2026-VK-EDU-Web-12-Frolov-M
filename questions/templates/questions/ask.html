@@ -1,27 +1,41 @@
 {% extends 'layout/base.html' %}
-
 {% load static %}
-    {% block title %}
-    <title>AlertHub - Задать вопрос</title>
-    {% endblock %}
-{% block content %}
 
-        <div class = "page-title">Задайте вопрос</div>
-<form class="ask-form">
+{% block title %}
+<title>AlertHub - Задать вопрос</title>
+{% endblock %}
+
+{% block content %}
+<div class="page-title">Задайте вопрос</div>
+
+<form method="post" class="ask-form">
+    {% csrf_token %}
+    
     <div class="form-group">
-        <label>Заголовок</label>
-        <input type="text" placeholder="Например: Как в C++..." class="form-control">
+        <label>{{ form.title.label }}</label>
+        {{ form.title }}
+        {% if form.title.errors %}
+            <div class="alert alert-danger">{{ form.title.errors }}</div>
+        {% endif %}
         <small class="hint">Максимум 255 символов</small>
     </div>
+
     <div class="form-group">
-        <label>Текст</label>
-        <textarea rows="10" class="form-control"></textarea>
+        <label>{{ form.content.label }}</label>
+        {{ form.content }}
+        {% if form.content.errors %}
+            <div class="alert alert-danger">{{ form.content.errors }}</div>
+        {% endif %}
     </div>
+
     <div class="form-group">
-        <label>Теги</label>
-        <input type="text" placeholder="tag1, tag2" class="form-control">
+        <label>{{ form.tags_str.label }}</label>
+        {{ form.tags_str }}
+        {% if form.tags_str.errors %}
+            <div class="alert alert-danger">{{ form.tags_str.errors }}</div>
+        {% endif %}
     </div>
+
     <button type="submit" class="btn btn-primary">Спросить!</button>
 </form>
-            
- {% endblock %}
+{% endblock %}

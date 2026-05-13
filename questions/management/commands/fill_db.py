@@ -137,8 +137,7 @@ class Command(BaseCommand):
                     AnswerLike.objects.bulk_create(ans_likes, ignore_conflicts=True)  
 
     def update_likes_and_answer_count(self):
-        self.stdout.write("Считаем лайки и ответы...")
-
+        self.stdout.write("Считаем лайки, ответы и статистику профилей...")
 
         ans_likes = AnswerLike.objects.filter(answer=OuterRef('pk'), is_like=True).values('answer').annotate(c=Count('*')).values('c')
         ans_dislikes = AnswerLike.objects.filter(answer=OuterRef('pk'), is_like=False).values('answer').annotate(c=Count('*')).values('c')
@@ -160,4 +159,13 @@ class Command(BaseCommand):
         
         Tag.objects.update(
             question_count=Coalesce(Subquery(tag_questions_count), 0)
+        )
+
+        prof_q_count = Question.objects.filter(author=OuterRef('user')).values('author').annotate(c=Count('*')).values('c')
+
+        prof_a_count = Answer.objects.filter(author=OuterRef('user')).values('author').annotate(c=Count('*')).values('c')
+
+        Profile.objects.update(
+            questions_count=Coalesce(Subquery(prof_q_count), 0),
+            answers_count=Coalesce(Subquery(prof_a_count), 0)
         )
