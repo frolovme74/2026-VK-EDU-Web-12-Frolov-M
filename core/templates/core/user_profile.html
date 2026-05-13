@@ -29,14 +29,11 @@
                     <div class="stat-value">{{ target_user.profile.answers_count }}</div>
                     <div class="stat-label">Ответов</div>
                 </div>
-                {% comment %} <a href="{% url 'ask' %}" class="btn btn-primary">Настройки</a> {% endcomment %}
+                                {% if request.user == target_user %}
+                <a href="{% url 'settings' %}" class="btn btn-primary">Настройки</a>
+                                {% endif %}
             </div>
             
-            <div class="profile-actions">
-                {% if request.user == target_user %}
-                    <a href="{% url 'settings' %}" class="btn btn-primary">Настройки профиля</a>
-                {% endif %}
-            </div>
         </div>
     </div>
 </div>

@@ -96,7 +96,7 @@ class QuestionLike(models.Model):
     
 class AnswerManager(models.Manager):
     def get_for_question(self, question):
-        return question.answers.select_related('author', 'author__profile').order_by('-rating')
+        return question.answers.select_related('author', 'author__profile').order_by('-rating', '-created_at')
 
 class Answer(RatingMixin):
 

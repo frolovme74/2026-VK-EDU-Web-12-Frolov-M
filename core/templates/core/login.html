@@ -1,32 +1,44 @@
 {% extends 'layout/base.html' %}
-
 {% load static %}
-    {% block title %}
-    <title>AlertHub - Вход</title>
-    {% endblock %}
+
+{% block title %}
+<title>AlertHub - Вход</title>
+{% endblock %}
+
 {% block content %}
-
 <div class="auth-container">
-                <h1 class="page-title">Вход</h1>
+    <h1 class="page-title">Вход</h1>
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endfor %}
+    {% endif %}
 
-                <form class="auth-form" action="#" method="post">
-                    <div class="form-group">
-                        <label for="username" class="form-label">Логин</label>
-                        <input type="text" class="form-control" id="username" name="username" placeholder="ivan_ivanov">
-                    </div>
+    <form class="auth-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
 
-                    <div class="form-group">
-                        <label for="password" class="form-label">Пароль</label>
-                        <input type="password" class="form-control" id="password" name="password">
-                    </div>
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
 
-                    <button type="submit" class="btn btn-dark">Войти</button>
-                    
-                    <div style="text-align: center;">
-                        <span>Нет аккаунта?</span>
-                        <a href="{% url 'signup' %}" class="link-primary">Регистрация</a>
-                    </div>
-                </form>
+                {{ field }}
+                
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <small class="error-text">{{ error }}</small>
+                    {% endfor %}
+                    <script>document.getElementById('{{ field.id_for_label }}').classList.add('error-input');</script>
+                {% endif %}
             </div>
-            
- {% endblock %}
+        {% endfor %}
+
+        <button type="submit" class="btn btn-dark" style="width: 100%; margin-bottom: 1rem;">Войти</button>
+        
+        <div style="text-align: center;">
+            <span>Нет аккаунта?</span>
+            <a href="{% url 'signup' %}" class="link-primary">Регистрация</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

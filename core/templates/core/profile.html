@@ -1,39 +1,44 @@
 {% extends 'layout/base.html' %}
-
 {% load static %}
-    {% block title %}
-    <title>AlertHub - Профиль</title>
-    {% endblock %}
+
 {% block content %}
+<h2 class="page-title">Настройки: {{ user.username }}</h2>
 
- <h2 class="page-title">Настройки: Yuri_Shevchuk</h2>
+<form class="settings-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
 
-            <form class="settings-form">
-                <div class="form-group">
-                    <label class="form-label">Логин</label>
-                    <input type="text" class="form-input" value="Yuri_Shevchuk">
-                </div>
+    <div class="form-group">
+        <label class="form-label">Логин</label>
+        {{ user_form.username }}
+        {% for error in user_form.username.errors %}<span class="error-text">{{ error }}</span>{% endfor %}
+    </div>
 
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-input error-field" value="invalid-email">
-                    <span class="error-text">Вы ввели невалидный email</span>
-                </div>
+    <div class="form-group">
+        <label class="form-label">Email</label>
+        {{ user_form.email }}
+        {% for error in user_form.email.errors %}<span class="error-text">{{ error }}</span>{% endfor %}
+    </div>
 
-                <div class="form-group">
-                    <label class="form-label">Никнейм</label>
-                    <input type="text" class="form-input" value="Юрий Юлианович">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Аватар</label>
-                    <div class="avatar-edit-row">
-                        <img src="{% static 'questions/avatar.jpg' %}" alt="Current" class="avatar-lg">
-                        <input type="file" class="form-input-file">
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary btn-save">Сохранить</button>
-            </form>
-            
- {% endblock %}
+    <div class="form-group">
+        <label class="form-label">Аватар</label>
+        <div class="avatar-edit-row">
+            <img src="{{ user.profile.avatar_url }}" alt="Current" class="avatar-lg">
+            {{ profile_form.avatar }}
+        </div>
+        {% for error in profile_form.avatar.errors %}<span class="error-text">{{ error }}</span>{% endfor %}
+    </div>
+<div class="form-actions">
+    <button type="submit" class="btn btn-primary btn-save">Сохранить</button>
+    <a href="{{user.profile.get_absolute_url}}" class="btn btn-secondary">Назад</a>
+</div>
+    {% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'success' %}
+            <div class="alert-success">
+                {{ message }}
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+</form>
+{% endblock %}

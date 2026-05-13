@@ -39,6 +39,20 @@
         </article>
 
         <hr class="section-divider">
+            <section class="add-answer-section">
+        {% if user.is_authenticated %}
+            <form method="post">
+                {% csrf_token %}
+                <div>
+                    <label class="form-label">Добавить ответ:</label>
+                    {{ form.content }}
+                </div>
+                <button type="submit" class="btn btn-primary">Отправить</button>
+            </form>
+        {% else %}
+            <p>Ответы могут оставлять только авторизованные пользователи</p>
+        {% endif %}
+    </section>
         {% if page_obj%}
 
         <section class="answers-section">

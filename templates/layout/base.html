@@ -21,17 +21,22 @@
 
         <div class="user-nav">
             <a href="{% url 'ask' %}" class="btn btn-primary hide-mobile">Спросить!</a>
-            
+            {% if user.is_authenticated %}
             <div class="logged-user">
-                <img src="{% static 'img/avatar.jpg' %}" alt="Avatar" class="user-avatar">
+                <a href = "{% url 'profile_self' %}"><img src="{{user.profile.avatar_url}}" alt="Avatar" class="user-avatar"></a>
                 <div class="user-meta">
-                    <span class="user-nickname">Yuri_Shevchuk</span>
+                    <a href = "{% url 'profile_self' %}"><span class="user-nickname">{{user.username}}</span></a>
                     <div class="user-controls">
-                        <a href="{% url 'profile' %}" class="control-link">Настройки</a>
-                        <a href="{% url 'login' %}" class="control-link logout">Выйти</a>
+                        <a href="{% url 'settings' %}" class="control-link">Настройки</a>
+                        <a href="{% url 'logout' %}?next={{ request.path }}" class="control-link logout">Выйти</a>
                     </div>
                 </div>
             </div>
+        {% else %}
+            <a href="{% url 'login' %}?next={{ request.path }}" class="link-light">Вход</a>
+            <a href="{% url 'signup' %}" class="btn btn-outline">Регистрация</a>
+        {% endif %}
+
         </div>
     </div>
 </header>
