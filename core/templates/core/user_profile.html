@@ -1,0 +1,40 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+    {% block title %}
+    <title>AlertHub - Профиль {{target_user.username}}</title>
+    {% endblock %}
+{% block content %}
+<div class="page-title">
+    Профиль пользователя: {{ target_user.username }}
+</div>
+
+<div class="sidebar-block user-profile-card">
+    <div class="profile-layout">
+        <div class="profile-aside">
+            <img src="{{ target_user.profile.avatar_url }}" 
+                 alt="{{ target_user.username }}" 
+                 class="profile-avatar-big">
+        </div>
+
+        <div class="profile-main">
+            <h2 class="user-name-title">{{ target_user.username }}</h2>
+            <p class="post-time">На сайте с: {{ target_user.date_joined|date:"d.m.Y" }}</p>
+            
+            <div class="user-stats-row">
+                <div class="stat-item">
+                    <div class="stat-value">{{ target_user.profile.questions_count }}</div>
+                    <div class="stat-label">Вопросов</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ target_user.profile.answers_count }}</div>
+                    <div class="stat-label">Ответов</div>
+                </div>
+                                {% if request.user == target_user %}
+                <a href="{% url 'settings' %}" class="btn btn-primary">Настройки</a>
+                                {% endif %}
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}
