@@ -5,6 +5,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from questions.forms import AskForm, AnswerForm
 from django.urls import reverse_lazy
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from .models import Question, QuestionLike
 
 def paginate(objects, request, per_page=5):
     page_number = request.GET.get('page')
@@ -65,3 +68,66 @@ def question(request, question_id):
         'page_obj': page_obj,
         'form': form,
     })
+
+@require_POST
+def like_question(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Необходимо авторизоваться'}, status=401)
+    
+    question_id = request.POST.get('question_id')
+    action = request.POST.get('action')
+    
+    if action not in ['like', 'dislike']:
+        return JsonResponse({'error': 'Невалидные параметры'}, status=400)
+        
+    try:
+        question = Question.objects.get(id=question_id)
+    except Question.DoesNotExist:
+        return JsonResponse({'error': 'Вопрос не найден'}, status=404)
+
+    new_rating = QuestionLike.objects.toggle_vote(request.user, question, action)
+        
+    return JsonResponse({'rating': new_rating})
+
+
+@require_POST
+def like_answer(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Необходимо авторизоваться'}, status=401)
+        
+    answer_id = request.POST.get('answer_id')
+    action = request.POST.get('action')
+    
+    if action not in ['like', 'dislike']:
+        return JsonResponse({'error': 'Невалидные параметры'}, status=400)
+        
+    try:
+        answer = Answer.objects.get(id=answer_id)
+    except Answer.DoesNotExist:
+        return JsonResponse({'error': 'Ответ не найден'}, status=404)
+        
+    # И здесь:
+    new_rating = AnswerLike.objects.toggle_vote(request.user, answer, action)
+        
+    return JsonResponse({'rating': new_rating})
+
+
+@require_POST
+def mark_correct_answer(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Необходимо авторизоваться'}, status=401)
+        
+    answer_id = request.POST.get('answer_id')
+    
+    try:
+        answer = Answer.objects.get(id=answer_id)
+    except Answer.DoesNotExist:
+        return JsonResponse({'error': 'Ответ не найден'}, status=404)
+        
+    # Вызываем метод самой модели ответа
+    is_correct = answer.toggle_correct(request.user)
+    
+    if is_correct is None:
+        return JsonResponse({'error': 'Вы не являетесь автором этого вопроса'}, status=403)
+        
+    return JsonResponse({'is_correct': is_correct})

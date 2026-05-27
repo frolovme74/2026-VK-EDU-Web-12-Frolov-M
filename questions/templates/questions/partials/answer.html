@@ -2,11 +2,19 @@
 <div class="answer-card">
     <div class="author-aside">
         <a href="{{answer.author.profile.get_absolute_url}}"><img src="{{ answer.author.profile.avatar_url }}" alt="Avatar" class="avatar-sm"></a>
-        <div class="vote-widget">
-            <button class="vote-btn vote-up">▲</button>
-            <span class="vote-count">{{answer.rating}}</span>
-            <button class="vote-btn vote-down">▼</button>
-        </div>
+    {% load vote_tags %}
+
+    {% get_user_vote request.user answer 'answer' as user_vote %}
+
+    <div class="vote-widget">
+        <button class="vote-btn vote-up {% if user_vote == 'like' %}active{% endif %}" 
+                data-id="{{ answer.id }}" data-type="answer" data-action="like">▲</button>
+                
+        <span class="vote-count" id="rating-answer-{{ answer.id }}">{{ answer.rating }}</span>
+        
+        <button class="vote-btn vote-down {% if user_vote == 'dislike' %}active{% endif %}" 
+                data-id="{{ answer.id }}" data-type="answer" data-action="dislike">▼</button>
+    </div>
     </div>
     <div class="answer-body">
         <div class="answer-text">
@@ -14,11 +22,20 @@
         </div>
         <div class="answer-footer">
             <div class="answer-controls">
-                <label class="correct-checkbox-container">
-                    <input type="checkbox" {%if answer.is_correct%}checked{%endif%}>
-                    <span class="checkmark"></span>
-                    <span class="label-text">Correct?</span>
-                </label>
+                {% if request.user == question.author %}
+                    <label class="correct-checkbox-container">
+                        <input type="checkbox" class="correct-checkbox" data-id="{{ answer.id }}" {% if answer.is_correct %}checked{% endif %}>
+                        <span class="checkmark"></span>
+                        <span class="label-text">Correct?</span>
+                    </label>
+                    
+                {% elif answer.is_correct %}
+                    <label class="correct-checkbox-container" style="opacity: 0.8; cursor: not-allowed;">
+                        <input type="checkbox" disabled checked>
+                        <span class="checkmark"></span>
+                        <span class="label-text text-success">Correct Answer</span>
+                    </label>
+                {% endif %}
             </div>
             <span class="post-time">{{ answer.created_at|date:"d.m.Y, H:i" }}</span>
         </div>

@@ -57,10 +57,13 @@ def profile_settings(request):
         
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
+            profile_form.save()
             messages.success(request, "Данные успешно обновлены!")
-            return redirect('profile')
+            return redirect('settings')
         else:
-            request.user = User.objects.get(pk=request.user.pk)
+            print("Ошибки user_form:", user_form.errors)
+            print("Ошибки profile_form:", profile_form.errors)
+            print("Файлы в запросе:", request.FILES) # <-- ЭТО САМОЕ ВАЖНОЕ
     else:
         user_form = UserSettingsForm(instance=request.user)
         profile_form = ProfileSettingsForm(instance=request.user.profile)

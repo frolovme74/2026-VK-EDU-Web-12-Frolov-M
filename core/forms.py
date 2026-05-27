@@ -40,6 +40,7 @@ class SignupForm(forms.ModelForm):
         if avatar:
             if avatar.size > 2 * 1024 * 1024:
                 raise forms.ValidationError("Файл слишком большой. Максимальный размер — 2 МБ.")
+        return avatar
 
 class LoginForm(forms.Form):
     username = forms.CharField(label="Логин")
@@ -62,9 +63,6 @@ class UserSettingsForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email']
-    class Meta:
-        model = User
-        fields = ['username', 'email']
 
 class ProfileSettingsForm(forms.ModelForm):
     class Meta:
@@ -80,4 +78,4 @@ class ProfileSettingsForm(forms.ModelForm):
         if avatar:
             if avatar.size > 2 * 1024 * 1024:
                 raise forms.ValidationError("Файл слишком большой. Максимальный размер — 2 МБ.")
-            
+        return avatar

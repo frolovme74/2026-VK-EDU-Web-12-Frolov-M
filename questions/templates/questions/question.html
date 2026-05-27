@@ -11,10 +11,26 @@
             <div class="question-header-row">
                 <div class="author-aside">
                     <a href="{{question.author.profile.get_absolute_url}}"><img src="{{ question.author.profile.avatar_url }}" alt="Avatar" class="avatar-lg"></a>
+                    {% load vote_tags %} {% get_user_vote request.user question 'question' as user_vote_q %}
+
                     <div class="vote-widget">
-                        <button class="vote-btn vote-up">▲</button>
-                        <span class="vote-count">{{question.rating}}</span>
-                        <button class="vote-btn vote-down">▼</button>
+                        <button class="vote-btn vote-up {% if user_vote_q == 'like' %}active{% endif %}" 
+                                data-id="{{ question.id }}" 
+                                data-type="question" 
+                                data-action="like">
+                            ▲
+                        </button>
+                        
+                        <span class="vote-count" id="rating-question-{{ question.id }}">
+                            {{ question.rating }}
+                        </span>
+                        
+                        <button class="vote-btn vote-down {% if user_vote_q == 'dislike' %}active{% endif %}" 
+                                data-id="{{ question.id }}" 
+                                data-type="question" 
+                                data-action="dislike">
+                            ▼
+                        </button>
                     </div>
                 </div>
                 

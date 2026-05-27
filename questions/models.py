@@ -78,9 +78,30 @@ class Question(RatingMixin):
 
     def __str__(self):
         return f"Вопрос {self.id}: {Truncator(self.title).chars(40)}"
+class VoteManager(models.Manager):
+    def toggle_vote(self, user, content_object, action_type):
+        is_like_bool = (action_type == 'like')
+        
+        fk_field = 'question' if hasattr(self.model, 'question') else 'answer'
+        lookup = {fk_field: content_object, 'user': user}
+
+        vote = self.filter(**lookup).first()
+
+        if vote:
+            if vote.is_like == is_like_bool:
+                vote.delete()
+            else:
+                vote.is_like = is_like_bool
+                vote.save()
+        else:
+            self.create(**lookup, is_like=is_like_bool)
+
+        content_object.refresh_from_db()
+
+        return content_object.rating  
     
 class QuestionLike(models.Model):
-
+    objects = VoteManager()
     question = models.ForeignKey("questions.Question", verbose_name="Вопрос", on_delete=models.CASCADE, related_name="votes")
     user = models.ForeignKey("auth.User", verbose_name="От пользователя", on_delete=models.CASCADE)
     is_like = models.BooleanField(default=True, verbose_name="Тип оценки", choices=((True, 'Лайк'), (False, 'Дизлайк')))
@@ -114,9 +135,17 @@ class Answer(RatingMixin):
 
     def __str__(self):
         return f"Ответ {self.id}: {Truncator(self.content).chars(40)}"
+
+    def toggle_correct(self, user):
+        if self.related_question.author != user:
+            return None
+        
+        self.is_correct = not self.is_correct
+        self.save()
+        return self.is_correct
     
 class AnswerLike(models.Model):
-
+    objects = VoteManager()
     answer = models.ForeignKey("questions.Answer", verbose_name="Ответ", on_delete=models.CASCADE, related_name="votes")
     user = models.ForeignKey("auth.User", verbose_name="От пользователя", on_delete=models.CASCADE)
     is_like = models.BooleanField(default=True, verbose_name="Тип оценки", choices=((True, 'Лайк'), (False, 'Дизлайк')))
