@@ -40,6 +40,9 @@ class SignupForm(forms.ModelForm):
         if avatar:
             if avatar.size > 2 * 1024 * 1024:
                 raise forms.ValidationError("Файл слишком большой. Максимальный размер — 2 МБ.")
+            valid_mime_types = ['image/jpeg', 'image/png']
+            if avatar.content_type not in valid_mime_types:
+                raise forms.ValidationError("Неподдерживаемый формат. Пожалуйста, загрузите JPEG или PNG.")
         return avatar
 
 class LoginForm(forms.Form):
@@ -78,4 +81,7 @@ class ProfileSettingsForm(forms.ModelForm):
         if avatar:
             if avatar.size > 2 * 1024 * 1024:
                 raise forms.ValidationError("Файл слишком большой. Максимальный размер — 2 МБ.")
+            valid_mime_types = ['image/jpeg', 'image/png']
+            if avatar.content_type not in valid_mime_types:
+                raise forms.ValidationError("Неподдерживаемый формат. Пожалуйста, загрузите JPEG или PNG.")
         return avatar
